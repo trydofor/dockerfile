@@ -1,5 +1,5 @@
 ################
-# http://directory.apache.org/apacheds/downloads.html
+# https://www.ldap-account-manager.org/static/doc/manual-onePage/index.html
 # docker build -t trydofor/ldap-account-manager:6.3 .
 ################
 
@@ -68,9 +68,9 @@ RUN DEBIAN_FRONTEND=noninteractive \
 
 RUN wget --no-check-certificate \
       https://github.com/LDAPAccountManager/lam/releases/download/lam_6_3/ldap-account-manager_6.3-1_all.deb \
-      -O /tmp/ldap-account-manager_all.deb \
+      -O    /tmp/ldap-account-manager_all.deb \
  && dpkg -i /tmp/ldap-account-manager_all.deb \
- && rm -rf /tmp/ldap-account-manager_all.deb
+ && rm -rf  /tmp/ldap-account-manager_all.deb
 
 RUN apt-get purge wget ca-certificates -y  \
  && apt-get autoremove -y \
@@ -81,12 +81,10 @@ COPY ./start.sh /usr/local/bin/start-lam.sh
 RUN chmod +x /usr/local/bin/start-lam.sh
 
 RUN a2enmod php7.0 && \
-    ln -sf /dev/stdout /var/log/apache2/access.log && \
-    ln -sf /dev/stderr /var/log/apache2/error.log && \
-    unlink /var/lib/ldap-account-manager/config/config.cfg && \
-    mv /var/lib/ldap-account-manager/sess /var/lib/ldap-account-manager/sess.back && \
-    ln -sf /config/config.cfg /var/lib/ldap-account-manager/config/config.cfg && \
-    ln -sf /config/sess /var/lib/ldap-account-manager/sess
+    rm -rf /var/lib/ldap-account-manager/config/config.cfg && \
+    cp /etc/ldap-account-manager/config.cfg /var/lib/ldap-account-manager/config/config.cfg && \
+    mv /var/lib/ldap-account-manager/config /var/lib/ldap-account-manager/config.back && \
+    mv /var/lib/ldap-account-manager/sess   /var/lib/ldap-account-manager/sess.back
 
 VOLUME /config 
 EXPOSE 80
