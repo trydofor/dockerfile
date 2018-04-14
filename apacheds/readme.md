@@ -9,7 +9,10 @@ https://directory.apache.org/apacheds/basic-ug/1.4.2-changing-admin-password.htm
 
 # 2.start
 ```
-docker run -d  --name apacheds \
+docker run -d \
+ --name apacheds \
+ --restart=unless-stopped \
+ -e JAVA_OPTS="-Xms512m -Xmx2048m -Djava.awt.headless=true" \
  -p 10389:10389 \
  -v /data/docker/apacheds/data:/app/data \
 trydofor/apacheds:2.0.0-M24

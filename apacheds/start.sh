@@ -26,4 +26,10 @@ ln -sf /dev/stdout "$THE_INSTANCE/log/apacheds.log"
 # start
 bin/apacheds.sh start
 
-tail -f /dev/null
+# https://www.ctl.io/developers/blog/post/gracefully-stopping-docker-containers/
+trap "echo 'Stopping Apache DS'; bin/apacheds.sh stop; exit 0" SIGTERM SIGKILL
+
+# wait forever
+while true; do
+  tail -f /dev/null & wait ${!}
+done
